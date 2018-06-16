@@ -11,6 +11,8 @@ namespace Prerequisite.Controllers
     {
         public ActionResult Index()
         {
+            checkInstalled("SQL");
+            GetSQLServerVersion();
             GetVersionFromRegistry();
             Get45PlusFromRegistry();
             return View();
@@ -74,7 +76,56 @@ namespace Prerequisite.Controllers
                 }
             }
         }
+        private static void GetSQLServerVersion()
+        {
+            RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
+            using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
+            {
+                RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
+                if (instanceKey != null)
+                {
+                    foreach (var instanceName in instanceKey.GetValueNames())
+                    {
+                        Console.WriteLine(Environment.MachineName + @"\" + instanceName);
+                    }
+                }
+            }
+        }
+        private static void checkInstalled(string c_name)
+        {
+            string displayName;
 
+            string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKey);
+            if (key != null)
+            {
+                foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
+                {
+                    displayName = subkey.GetValue("DisplayName") as string;
+                    if (displayName != null && displayName.Contains(c_name))
+                    {
+                        //return true;
+                    }
+                }
+                key.Close();
+            }
+
+            registryKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
+            key = Registry.LocalMachine.OpenSubKey(registryKey);
+            if (key != null)
+            {
+                foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
+                {
+                    displayName = subkey.GetValue("DisplayName") as string;
+                    if (displayName != null && displayName.Contains(c_name))
+                    {
+                        //return true;
+                    }
+                }
+                key.Close();
+            }
+            //return false;
+        }
         private static void Get45PlusFromRegistry()
         {
             const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
@@ -91,7 +142,6 @@ namespace Prerequisite.Controllers
                 }
             }
         }
-
         // Checking the version using >= will enable forward compatibility.
         private static string CheckFor45PlusVersion(int releaseKey)
         {
