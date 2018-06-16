@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceProcess;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,6 +12,8 @@ namespace Prerequisite.Controllers
     {
         public ActionResult Index()
         {
+            IsIISRunning();
+            GetIISVersion();
             checkInstalled("SQL");
             GetSQLServerVersion();
             GetVersionFromRegistry();
@@ -142,7 +145,6 @@ namespace Prerequisite.Controllers
                 }
             }
         }
-        // Checking the version using >= will enable forward compatibility.
         private static string CheckFor45PlusVersion(int releaseKey)
         {
             if (releaseKey >= 461808)
@@ -167,7 +169,37 @@ namespace Prerequisite.Controllers
             // that 4.5 or later is installed.
             return "No 4.5 or later version detected";
         }
-    
+        private static bool IsIISRunning()
+        {
+
+            bool isIISrunning = false;
+            ServiceController controller = new ServiceController("W3SVC");
+            if (controller.Status == ServiceControllerStatus.Running)
+            {
+                isIISrunning = true;
+            }
+            return isIISrunning;
+        }
+        private static Version GetIISVersion()
+        {
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\InetStp", false))
+            {
+                if (key != null)
+                {
+                    int majorVersion = (int)key.GetValue("MajorVersion", -1);
+                    int minorVersion = (int)key.GetValue("MinorVersion", -1);
+
+                    if (majorVersion != -1 && minorVersion != -1)
+                    {
+                        return new Version(majorVersion, minorVersion);
+                    }
+                }
+            }
+
+            return new Version(0, 0);
+        }
+
 
     }
 }
