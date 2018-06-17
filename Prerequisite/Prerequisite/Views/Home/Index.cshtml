@@ -4,47 +4,41 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
 <div>
-    <h4>Config</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.IISVersion)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IISVersion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DotNetFramework)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DotNetFramework)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SQLServerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SQLServerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsSoftwareInstalled)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsSoftwareInstalled)
-        </dd>
-
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="bs-example">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Value</th>             
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="active">
+                <td> @Html.DisplayNameFor(model => model.IISVersion)</td>
+                <td> @Html.DisplayFor(model => model.IISVersion)</td>                
+            </tr>
+            <tr class="success">
+                <td> @Html.DisplayNameFor(model => model.DotNetFramework)</td>
+                <td> @Html.DisplayFor(model => model.DotNetFramework)</td>
+            </tr>
+            <tr class="info">
+                <td> @Html.DisplayNameFor(model => model.SQLServerName)</td>
+                <td> @Html.DisplayFor(model => model.SQLServerName)</td>
+
+            </tr>
+            <tr class="warning">
+                <td> @Html.DisplayNameFor(model => model.IsRequiredSoftwareInstalled)</td>
+                <td> @Html.DisplayFor(model => model.IsRequiredSoftwareInstalled)</td>
+
+            </tr>
+            @*<tr class="danger">
+                <td>5</td>
+                <td>Telephone</td>
+            </tr>*@
+        </tbody>
+    </table>
+</div>
+

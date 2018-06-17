@@ -11,7 +11,7 @@ namespace Prerequisite.Models
         public string DotNetFramework { get; set; }
         public string SQLServerName { get; set; }
         public List<string> SQLServerInstanceName { get; set; }
-        public bool IsSoftwareInstalled { get; set; }
+        public bool IsRequiredSoftwareInstalled { get; set; }
         public List<string> IISFeature { get; set; }
     }
 }

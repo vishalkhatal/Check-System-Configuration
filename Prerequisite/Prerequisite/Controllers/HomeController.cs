@@ -16,7 +16,7 @@ namespace Prerequisite.Controllers
             config.IISVersion = GetIISVersion();
             config.SQLServerName = GetServerName("SQL");
             config.SQLServerInstanceName = GetSQLServerInstance();
-            config.IsSoftwareInstalled =checkInstalled("SQL");
+            config.IsRequiredSoftwareInstalled = checkInstalled("SQL");
             config.DotNetFramework = Get45PlusFromRegistry();
             config.IISFeature = GetComponents();
             return View(config);
