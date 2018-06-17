@@ -190,7 +190,7 @@ namespace Prerequisite.Controllers
         private static string GetIISComponents()
         {
             string instances = string.Empty;
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\InetStp\Components"))
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"HKEY_LOCAL_MACHINE\Software\Microsoft\InetStp\Components\StaticContent"))
             {
                 if (key != null)
                 {
@@ -280,7 +280,7 @@ namespace Prerequisite.Controllers
                 instances = instances.Remove(instances.Length - 1);
             return instances;
         }
-        public bool IsV40Installed()
+        private static bool IsV40Installed()
         {
             try
             {

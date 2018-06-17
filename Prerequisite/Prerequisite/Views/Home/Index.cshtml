@@ -41,13 +41,13 @@
                 <td> @Html.DisplayNameFor(model => model.SQLServerCompact)</td>
                 <td>
                     @if (Model.SQLServerCompact)
-            {
+             {
                 <h5> Yes</h5>
-    }
-    else
-    {
-        <h5> No</h5>
-}
+              }
+                else
+                {
+                    <h5> No</h5>
+            }
                 </td>
             </tr>
 
@@ -69,7 +69,39 @@
 }
                 </td>
             </tr>
+            <tr>
+                <td> @Html.DisplayNameFor(model => model.SQLConnectivity)</td>
+                <td>
+                    <div class="form-group">
+                        <label for="servername">Server Name:</label>
+                        <input type="text" class="form-control" id="servername" placeholder="Enter Server Name" name="servername">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">UserName:</label>
+                        <input type="text" class="form-control credential" id="username" placeholder="Enter UserName" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control credential" id="pwd" placeholder="Enter password" name="pwd">
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="windowsAuthentication" name="windowsAuthentication" onclick="ShowHideDiv(this)"> Is Windows Authentication</label>
+                    </div>
+                    <button type="submit" class="btn btn-default">Test Connection</button>
+                </td>           
+
+            </tr>
         </tbody>
     </table>
 </div>
-
+<script>
+    function ShowHideDiv(windowsAuthentication) {
+        var windowsAuthentication = document.getElementById("windowsAuthentication");
+        if (windowsAuthentication.checked) {
+            $('.credential').attr("disabled", "disabled"); 
+        }
+        else {
+            $('.credential').removeAttr("disabled"); 
+        }
+    }
+</script>

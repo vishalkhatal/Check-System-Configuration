@@ -24,5 +24,7 @@ namespace Prerequisite.Models
         public bool IsRequiredSoftwareInstalled { get; set; }
         [Display(Name = "IIS Feature")]
         public string IISFeature { get; set; }
+        [Display(Name = "Test SQL Connectivity")]
+        public string SQLConnectivity { get; set; }
     }
 }
