@@ -12,10 +12,18 @@
         <thead>
             <tr>
                 <th>Property</th>
-                <th>Value</th>             
+                <th>Value</th>
             </tr>
         </thead>
         <tbody>
+            <tr class="success">
+                <td> @Html.DisplayNameFor(model => model.DotNetFramework)</td>
+                <td> @Html.DisplayFor(model => model.DotNetFramework)</td>
+            </tr>
+            <tr class="success">
+                <td> @Html.DisplayNameFor(model => model.DotNetFrameworkVersion)</td>
+                <td> @Html.DisplayFor(model => model.DotNetFrameworkVersion)</td>
+            </tr>
             <tr class="active">
                 <td> @Html.DisplayNameFor(model => model.IISVersion)</td>
                 <td> @Html.DisplayFor(model => model.IISVersion)</td>
@@ -24,10 +32,6 @@
                 <td> @Html.DisplayNameFor(model => model.IISFeature)</td>
                 <td> @Html.DisplayFor(model => model.IISFeature)</td>
             </tr>
-            <tr class="success">
-                <td> @Html.DisplayNameFor(model => model.DotNetFramework)</td>
-                <td> @Html.DisplayFor(model => model.DotNetFramework)</td>
-            </tr>
             <tr class="info">
                 <td> @Html.DisplayNameFor(model => model.SQLServerName)</td>
                 <td> @Html.DisplayFor(model => model.SQLServerName)</td>
@@ -35,11 +39,20 @@
             </tr>
             <tr class="info">
                 <td> @Html.DisplayNameFor(model => model.SQLServerInstanceName)</td>
-                <td> @Html.DisplayFor(model => model.SQLServerInstanceName)</td>              
+                <td> @Html.DisplayFor(model => model.SQLServerInstanceName)</td>
             </tr>
             <tr class="danger">
                 <td> @Html.DisplayNameFor(model => model.IsRequiredSoftwareInstalled)</td>
-                <td> @Html.DisplayFor(model => model.IsRequiredSoftwareInstalled)</td>
+                <td>
+                    @if (Model.IsRequiredSoftwareInstalled)
+                    {
+                        <h5> Yes</h5>
+                    }
+                    else
+                    {
+                        <h5> No</h5>
+                    }
+                </td>
             </tr>
         </tbody>
     </table>
