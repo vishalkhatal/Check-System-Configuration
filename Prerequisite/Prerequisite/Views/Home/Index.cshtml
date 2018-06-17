@@ -41,13 +41,13 @@
                 <td> @Html.DisplayNameFor(model => model.SQLServerCompact)</td>
                 <td>
                     @if (Model.SQLServerCompact)
-             {
-                <h5> Yes</h5>
-              }
-                else
-                {
-                    <h5> No</h5>
-            }
+                    {
+                        <h5> Yes</h5>
+                    }
+                    else
+                    {
+                        <h5> No</h5>
+                    }
                 </td>
             </tr>
 
@@ -60,13 +60,13 @@
                 <td> @Html.DisplayNameFor(model => model.IsRequiredSoftwareInstalled)</td>
                 <td>
                     @if (Model.IsRequiredSoftwareInstalled)
-            {
-                <h5> Yes</h5>
-    }
-    else
-    {
-        <h5> No</h5>
-}
+                    {
+                        <h5> Yes</h5>
+                    }
+                    else
+                    {
+                        <h5> No</h5>
+                    }
                 </td>
             </tr>
             <tr>
@@ -78,17 +78,17 @@
                     </div>
                     <div class="form-group">
                         <label for="username">UserName:</label>
-                        <input type="text" class="form-control credential" id="username" placeholder="Enter UserName" name="username">
+                        <input type="text" class="form-control credential" id="username" placeholder="Enter Username" name="username">
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password:</label>
-                        <input type="password" class="form-control credential" id="pwd" placeholder="Enter password" name="pwd">
+                        <input type="password" class="form-control credential" id="password" placeholder="Enter Password" name="password">
                     </div>
                     <div class="checkbox">
                         <label><input type="checkbox" id="windowsAuthentication" name="windowsAuthentication" onclick="ShowHideDiv(this)"> Is Windows Authentication</label>
                     </div>
-                    <button type="submit" class="btn btn-default">Test Connection</button>
-                </td>           
+                    <button type="submit" onclick="TestConnection()" class="btn btn-default">Test Connection</button>
+                </td>
 
             </tr>
         </tbody>
@@ -98,10 +98,23 @@
     function ShowHideDiv(windowsAuthentication) {
         var windowsAuthentication = document.getElementById("windowsAuthentication");
         if (windowsAuthentication.checked) {
-            $('.credential').attr("disabled", "disabled"); 
+            $('.credential').attr("disabled", "disabled");
         }
         else {
-            $('.credential').removeAttr("disabled"); 
+            $('.credential').removeAttr("disabled");
         }
+    }
+    function TestConnection() {
+        var windowsAuthentication = document.getElementById("windowsAuthentication");
+        var servername = $("#servername").val();
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        // call controller method
+        $.post("/Home/TestSQLConnection", { servername: servername, username: username, password: password, windowsAuthentication: windowsAuthentication.checked }, function (data) {
+            alert(data);
+        });
+
+
     }
 </script>

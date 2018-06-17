@@ -304,5 +304,10 @@ namespace Prerequisite.Controllers
             }
             return true;
         }
+        public JsonResult TestSQLConnection(string servername, string username, string password,bool windowsAuthentication)
+        {
+
+            return View();
+        }
     }
 }
