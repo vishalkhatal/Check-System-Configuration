@@ -27,4 +27,11 @@ namespace Prerequisite.Models
         [Display(Name = "Test SQL Connectivity")]
         public string SQLConnectivity { get; set; }
     }
+    public class permissions
+    {
+        public string entity_name { get; set; }
+        public string subentity_name { get; set; }
+        public string permission_name { get; set; }
+
+    }
 }

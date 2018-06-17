@@ -6,6 +6,9 @@ using System.ServiceProcess;
 using System.Web;
 using System.Web.Mvc;
 using Prerequisite.Models;
+using System.Data.SqlClient;
+using System.Data;
+
 namespace Prerequisite.Controllers
 {
     public class HomeController : Controller
@@ -34,12 +37,12 @@ namespace Prerequisite.Controllers
                 {
                     foreach (var instanceName in instanceKey.GetValueNames())
                     {
-                        instances= instances+instanceName+",";
+                        instances = instances + instanceName + ",";
                     }
                 }
             }
-            if(!string.IsNullOrEmpty(instances))
-            instances = instances.Remove(instances.Length - 1);
+            if (!string.IsNullOrEmpty(instances))
+                instances = instances.Remove(instances.Length - 1);
             return instances;
         }
         private static bool checkInstalled(string c_name)
@@ -75,7 +78,7 @@ namespace Prerequisite.Controllers
                 }
                 key.Close();
             }
-           return false;
+            return false;
         }
         private static string GetServerName(string c_name)
         {
@@ -120,7 +123,7 @@ namespace Prerequisite.Controllers
             {
                 if (ndpKey != null && ndpKey.GetValue("Release") != null)
                 {
-                   return(CheckFor45PlusVersion((int)ndpKey.GetValue("Release")));
+                    return (CheckFor45PlusVersion((int)ndpKey.GetValue("Release")));
                 }
                 else
                 {
@@ -304,10 +307,40 @@ namespace Prerequisite.Controllers
             }
             return true;
         }
-        public JsonResult TestSQLConnection(string servername, string username, string password,bool windowsAuthentication)
+        public JsonResult TestSQLConnection(string servername, string database, string username, string password, bool windowsAuthentication)
         {
+            string result = string.Empty;
+            string connetionString = null;
+            SqlConnection cnn;
+            if (!windowsAuthentication)
+                connetionString = string.Format("Data Source={0};Initial Catalog={1};User ID={2};Password={3}", servername, database, username, password);
+            else
+                connetionString = string.Format("Data Source={0};Initial Catalog={1};Integrated Security=True", servername, database);
+            cnn = new SqlConnection(connetionString);
+            try
+            {
+                cnn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM fn_my_permissions (NULL, 'DATABASE')", cnn);
+                cmd.CommandType = CommandType.Text;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dataTable = new DataTable();
 
-            return View();
+                // this will query your database and return the result to your datatable
+                da.Fill(dataTable);
+                var permissions = dataTable.DataTableToList<permissions>();
+                return Json(permissions, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                result = "";
+            }
+            finally
+            {
+                cnn.Close();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+
     }
 }

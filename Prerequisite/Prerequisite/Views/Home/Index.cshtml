@@ -77,6 +77,10 @@
                         <input type="text" class="form-control" id="servername" placeholder="Enter Server Name" name="servername">
                     </div>
                     <div class="form-group">
+                        <label for="database">Database:</label>
+                        <input type="text" class="form-control" id="database" placeholder="Enter Database Name" name="database">
+                    </div>
+                    <div class="form-group">
                         <label for="username">UserName:</label>
                         <input type="text" class="form-control credential" id="username" placeholder="Enter Username" name="username">
                     </div>
@@ -88,6 +92,9 @@
                         <label><input type="checkbox" id="windowsAuthentication" name="windowsAuthentication" onclick="ShowHideDiv(this)"> Is Windows Authentication</label>
                     </div>
                     <button type="submit" onclick="TestConnection()" class="btn btn-default">Test Connection</button>
+                    <div id="testConnResult">
+                        <div id="testConnPermissoinResult"></div>
+                    </div>
                 </td>
 
             </tr>
@@ -109,10 +116,24 @@
         var servername = $("#servername").val();
         var username = $("#username").val();
         var password = $("#password").val();
+        var database = $("#database").val();
 
+        
         // call controller method
-        $.post("/Home/TestSQLConnection", { servername: servername, username: username, password: password, windowsAuthentication: windowsAuthentication.checked }, function (data) {
-            alert(data);
+        $.post("/Home/TestSQLConnection", { servername: servername, database:database,username: username, password: password, windowsAuthentication: windowsAuthentication.checked }, function (data) {
+            if (data == "") {
+                $("#testConnPermissoinResult").html("");
+                alert("connection not valid");
+            }
+            else {
+                var dataItems = "";
+                $.each(data, function (index) {
+                    dataItems += data[index].permission_name + ",\n";
+                });
+
+                $("#testConnPermissoinResult").html(dataItems);
+
+            }
         });
 
 
