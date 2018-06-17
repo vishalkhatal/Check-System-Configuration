@@ -28,10 +28,6 @@
                 <td> @Html.DisplayNameFor(model => model.IISVersion)</td>
                 <td> @Html.DisplayFor(model => model.IISVersion)</td>
             </tr>
-            <tr class="active">
-                <td> @Html.DisplayNameFor(model => model.IISFeature)</td>
-                <td> @Html.DisplayFor(model => model.IISFeature)</td>
-            </tr>
             <tr class="info">
                 <td> @Html.DisplayNameFor(model => model.SQLServerName)</td>
                 <td> @Html.DisplayFor(model => model.SQLServerName)</td>
@@ -41,17 +37,36 @@
                 <td> @Html.DisplayNameFor(model => model.SQLServerInstanceName)</td>
                 <td> @Html.DisplayFor(model => model.SQLServerInstanceName)</td>
             </tr>
+            <tr class="info">
+                <td> @Html.DisplayNameFor(model => model.SQLServerCompact)</td>
+                <td>
+                    @if (Model.SQLServerCompact)
+            {
+                <h5> Yes</h5>
+    }
+    else
+    {
+        <h5> No</h5>
+}
+                </td>
+            </tr>
+
+            <tr class="active">
+                <td> @Html.DisplayNameFor(model => model.IISFeature)</td>
+                <td> @Html.DisplayFor(model => model.IISFeature)</td>
+            </tr>
+
             <tr class="danger">
                 <td> @Html.DisplayNameFor(model => model.IsRequiredSoftwareInstalled)</td>
                 <td>
                     @if (Model.IsRequiredSoftwareInstalled)
-                    {
-                        <h5> Yes</h5>
-                    }
-                    else
-                    {
-                        <h5> No</h5>
-                    }
+            {
+                <h5> Yes</h5>
+    }
+    else
+    {
+        <h5> No</h5>
+}
                 </td>
             </tr>
         </tbody>

@@ -20,6 +20,7 @@ namespace Prerequisite.Controllers
             config.SQLServerInstanceName = GetSQLServerInstance();
             config.IsRequiredSoftwareInstalled = checkInstalled("SQL");
             config.IISFeature = GetIISComponents();
+            config.SQLServerCompact = IsV40Installed();
             return View(config);
         }
         private static string GetSQLServerInstance()
@@ -278,6 +279,30 @@ namespace Prerequisite.Controllers
             if (!string.IsNullOrEmpty(instances))
                 instances = instances.Remove(instances.Length - 1);
             return instances;
+        }
+        public bool IsV40Installed()
+        {
+            try
+            {
+                System.Reflection.Assembly.Load("System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91");
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                return false;
+            }
+            try
+            {
+                var factory = System.Data.Common.DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
+            }
+            catch (System.Configuration.ConfigurationException)
+            {
+                return false;
+            }
+            catch (System.ArgumentException)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
