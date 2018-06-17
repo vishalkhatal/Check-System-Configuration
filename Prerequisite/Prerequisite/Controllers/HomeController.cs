@@ -18,7 +18,7 @@ namespace Prerequisite.Controllers
             config.SQLServerInstanceName = GetSQLServerInstance();
             config.IsRequiredSoftwareInstalled = checkInstalled("SQL");
             config.DotNetFramework = Get45PlusFromRegistry();
-            config.IISFeature = GetComponents();
+            config.IISFeature = GetIISComponents();
             return View(config);
         }
         private static string GetSQLServerInstance()
@@ -36,6 +36,7 @@ namespace Prerequisite.Controllers
                     }
                 }
             }
+            if(!string.IsNullOrEmpty(instances))
             instances = instances.Remove(instances.Length - 1);
             return instances;
         }
@@ -184,19 +185,22 @@ namespace Prerequisite.Controllers
 
             return "IIS Not enabled yet";
         }
-        private static List<string> GetComponents()
+        private static string GetIISComponents()
         {
-            List<string> instances = new List<string>();
+            string instances = string.Empty;
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\InetStp\Components\"))
             {
                 if (key != null)
                 {
                     foreach (var item in key.GetValueNames())
                     {
-                        instances.Add(item);
+                        instances = instances + item + ",";
                     }
                 }
             }
+
+            if (!string.IsNullOrEmpty(instances))
+                instances = instances.Remove(instances.Length - 1);
             return instances;
         }
 
