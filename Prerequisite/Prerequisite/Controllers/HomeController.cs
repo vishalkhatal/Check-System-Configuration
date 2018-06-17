@@ -26,25 +26,41 @@ namespace Prerequisite.Controllers
             config.SQLServerCompact = IsV40Installed();
             return View(config);
         }
-        private static string GetSQLServerInstance()
+
+        public JsonResult TestSQLConnection(string servername, string database, string username, string password, bool windowsAuthentication)
         {
-            string instances = string.Empty;
-            RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
-            using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
+            string result = string.Empty;
+            string connetionString = null;
+            SqlConnection cnn;
+            if (!windowsAuthentication)
+                connetionString = string.Format("Data Source={0};Initial Catalog={1};User ID={2};Password={3}", servername, database, username, password);
+            else
+                connetionString = string.Format("Data Source={0};Initial Catalog={1};Integrated Security=True", servername, database);
+            cnn = new SqlConnection(connetionString);
+            try
             {
-                RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
-                if (instanceKey != null)
-                {
-                    foreach (var instanceName in instanceKey.GetValueNames())
-                    {
-                        instances = instances + instanceName + ",";
-                    }
-                }
+                cnn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM fn_my_permissions (NULL, 'DATABASE')", cnn);
+                cmd.CommandType = CommandType.Text;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dataTable = new DataTable();
+
+                // this will query your database and return the result to your datatable
+                da.Fill(dataTable);
+                var permissions = dataTable.DataTableToList<permissions>();
+                return Json(permissions, JsonRequestBehavior.AllowGet);
             }
-            if (!string.IsNullOrEmpty(instances))
-                instances = instances.Remove(instances.Length - 1);
-            return instances;
+            catch (Exception ex)
+            {
+                result = "";
+            }
+            finally
+            {
+                cnn.Close();
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult TestSoftwareAvailability(string softwarename)
         {
             string displayName;
@@ -80,6 +96,8 @@ namespace Prerequisite.Controllers
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        #region Helper
         private static string GetServerName(string c_name)
         {
             string displayName;
@@ -307,39 +325,26 @@ namespace Prerequisite.Controllers
             }
             return true;
         }
-        public JsonResult TestSQLConnection(string servername, string database, string username, string password, bool windowsAuthentication)
+        private static string GetSQLServerInstance()
         {
-            string result = string.Empty;
-            string connetionString = null;
-            SqlConnection cnn;
-            if (!windowsAuthentication)
-                connetionString = string.Format("Data Source={0};Initial Catalog={1};User ID={2};Password={3}", servername, database, username, password);
-            else
-                connetionString = string.Format("Data Source={0};Initial Catalog={1};Integrated Security=True", servername, database);
-            cnn = new SqlConnection(connetionString);
-            try
+            string instances = string.Empty;
+            RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
+            using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
             {
-                cnn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM fn_my_permissions (NULL, 'DATABASE')", cnn);
-                cmd.CommandType = CommandType.Text;
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dataTable = new DataTable();
-
-                // this will query your database and return the result to your datatable
-                da.Fill(dataTable);
-                var permissions = dataTable.DataTableToList<permissions>();
-                return Json(permissions, JsonRequestBehavior.AllowGet);
+                RegistryKey instanceKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL", false);
+                if (instanceKey != null)
+                {
+                    foreach (var instanceName in instanceKey.GetValueNames())
+                    {
+                        instances = instances + instanceName + ",";
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                result = "";
-            }
-            finally
-            {
-                cnn.Close();
-            }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            if (!string.IsNullOrEmpty(instances))
+                instances = instances.Remove(instances.Length - 1);
+            return instances;
         }
+        #endregion
 
 
     }
