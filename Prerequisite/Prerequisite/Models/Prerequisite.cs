@@ -20,7 +20,7 @@ namespace Prerequisite.Models
         public string SQLServerInstanceName { get; set; }
         [Display(Name = "SQL Server Compact available on system")]
         public bool SQLServerCompact { get; set; }
-        [Display(Name = "Required Software available on system")]
+        [Display(Name = "Check Required Software availablity on system")]
         public bool IsRequiredSoftwareInstalled { get; set; }
         [Display(Name = "IIS Feature")]
         public string IISFeature { get; set; }

@@ -21,7 +21,7 @@ namespace Prerequisite.Controllers
             config.IISVersion = GetIISVersion();
             config.SQLServerName = GetServerName("SQL");
             config.SQLServerInstanceName = GetSQLServerInstance();
-            config.IsRequiredSoftwareInstalled = checkInstalled("SQL");
+            //config.IsRequiredSoftwareInstalled = checkInstalled("SQL");
             config.IISFeature = GetIISComponents();
             config.SQLServerCompact = IsV40Installed();
             return View(config);
@@ -45,10 +45,10 @@ namespace Prerequisite.Controllers
                 instances = instances.Remove(instances.Length - 1);
             return instances;
         }
-        private static bool checkInstalled(string c_name)
+        public JsonResult TestSoftwareAvailability(string softwarename)
         {
             string displayName;
-
+            string result = "";
             string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKey);
             if (key != null)
@@ -56,9 +56,9 @@ namespace Prerequisite.Controllers
                 foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
                 {
                     displayName = subkey.GetValue("DisplayName") as string;
-                    if (displayName != null && displayName.Contains(c_name))
+                    if (displayName != null && displayName.ToLower().Contains(softwarename.ToLower()))
                     {
-                        return true;
+                        result="Software Available";
                     }
                 }
                 key.Close();
@@ -71,14 +71,14 @@ namespace Prerequisite.Controllers
                 foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
                 {
                     displayName = subkey.GetValue("DisplayName") as string;
-                    if (displayName != null && displayName.Contains(c_name))
+                    if (displayName != null && displayName.ToLower().Contains(softwarename.ToLower()))
                     {
-                        return true;
+                        result = "Software Available";
                     }
                 }
                 key.Close();
             }
-            return false;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         private static string GetServerName(string c_name)
         {

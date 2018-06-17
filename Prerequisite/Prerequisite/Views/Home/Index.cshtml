@@ -59,6 +59,14 @@
             <tr class="danger">
                 <td> @Html.DisplayNameFor(model => model.IsRequiredSoftwareInstalled)</td>
                 <td>
+                    <div class="form-group">
+                        <label for="softwarename">Software Name:</label>
+                        <input type="text" class="form-control" id="softwarename" placeholder="Enter Software Name" name="softwarename">
+                    </div>
+                    <button type="submit" onclick="CheckAvailablity()" class="btn btn-default">Check Availablity</button>
+                    <div id="SoftwareAvailabilityResult"></div>
+                </td>
+                @*<td>
                     @if (Model.IsRequiredSoftwareInstalled)
                     {
                         <h5> Yes</h5>
@@ -67,7 +75,7 @@
                     {
                         <h5> No</h5>
                     }
-                </td>
+                </td>*@
             </tr>
             <tr>
                 <td> @Html.DisplayNameFor(model => model.SQLConnectivity)</td>
@@ -138,4 +146,21 @@
 
 
     }
+
+    function CheckAvailablity() {
+        var softwarename = $("#softwarename").val();
+        // call controller method
+        $.post("/Home/TestSoftwareAvailability", { softwarename: softwarename}, function (data) {
+            if (data == "") {
+                $("#SoftwareAvailabilityResult").html("Not Available");
+           }
+            else {
+                $("#SoftwareAvailabilityResult").html(data);
+
+            }
+        });
+
+
+    }
+
 </script>
