@@ -34,10 +34,11 @@
                 <td> @Html.DisplayFor(model => model.IsRequiredSoftwareInstalled)</td>
 
             </tr>
-            @*<tr class="danger">
-                <td>5</td>
-                <td>Telephone</td>
-            </tr>*@
+            <tr class="danger">
+                <td> @Html.DisplayNameFor(model => model.SQLServerInstanceName)</td>
+                <td> @Html.DisplayFor(model => model.SQLServerInstanceName)</td>
+
+            </tr>
         </tbody>
     </table>
 </div>

@@ -21,9 +21,9 @@ namespace Prerequisite.Controllers
             config.IISFeature = GetComponents();
             return View(config);
         }
-        private static List<string> GetSQLServerInstance()
+        private static string GetSQLServerInstance()
         {
-            List<string> instances = new List<string>();
+            string instances = string.Empty;
             RegistryView registryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
             using (RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))
             {
@@ -32,10 +32,11 @@ namespace Prerequisite.Controllers
                 {
                     foreach (var instanceName in instanceKey.GetValueNames())
                     {
-                        instances.Add(instanceName);
+                        instances= instances+instanceName+",";
                     }
                 }
             }
+            instances = instances.Remove(instances.Length - 1);
             return instances;
         }
         private static bool checkInstalled(string c_name)
