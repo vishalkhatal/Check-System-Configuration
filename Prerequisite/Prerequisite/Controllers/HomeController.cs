@@ -211,7 +211,8 @@ namespace Prerequisite.Controllers
         private static string GetIISComponents()
         {
             string instances = string.Empty;
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"HKEY_LOCAL_MACHINE\Software\Microsoft\InetStp\Components\StaticContent"))
+            const string subkey = @"Software\Microsoft\InetStp\Components\";
+            using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
             {
                 if (key != null)
                 {

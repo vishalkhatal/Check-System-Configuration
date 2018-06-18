@@ -138,8 +138,16 @@
                 $.each(data, function (index) {
                     dataItems += data[index].permission_name + ",\n";
                 });
+                var html = '<table><thead><tr> <th>Permission Name</th></tr></thead><tbody>';
+                for (var i = 0, len = data.length; i < len; i++) {
+                    html += '<tr>';
+                    html += '<td>' + data[i].permission_name + '</td>';    
+                    html += "</tr>";
+                }
+                html += '</tbody></table>';
 
-                $("#testConnPermissoinResult").html(dataItems);
+                $(html).appendTo('#testConnPermissoinResult');
+               // $("#testConnPermissoinResult").html(dataItems);
 
             }
         });
